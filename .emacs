@@ -1,3 +1,5 @@
+(setq redisplay-preemption-period nil)
+
 ;; Enable ido
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -22,6 +24,7 @@
 (ac-config-default)
 
 (setq-default ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+;(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
 (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
 (add-hook 'auto-complete-mode-hook 'ac-common-setup)
@@ -47,7 +50,7 @@
 (setq-default truncate-lines t)
 
 ; indent 4 spaces
-(setq-default c-basic-offset 8)
+(setq-default c-basic-offset 4)
 (setq indent-tabs-mode nil)
 
 (custom-set-variables
@@ -103,8 +106,9 @@
 (global-hi-lock-mode 1)
 
 ;; Hide things that just take up space
-(if (display-graphic-p)
-    ((scroll-bar-mode -1)
-     (tool-bar-mode -1))
-  (menu-bar-mode 0))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
   
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+(global-set-key "\C-c\C-m" 'execute-extended-command)
