@@ -1,3 +1,5 @@
+(require 'jka-compr)
+
 ;; Configure additional package archives
 (package-initialize)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -19,8 +21,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar prelude-packages
   '(ack-and-a-half auto-complete autopair concurrent ctable dash deferred
-		   epc flycheck flymake flymake-easy flymake-python-pyflakes
-		   ipython jedi popup python-django python-mode python-pylint
+		   epc ;;flycheck flymake flymake-easy flymake-python-pyflakes
+		   ipython popup python-django python-mode python-pylint
 		   pyvirtualenv s virtualenv yasnippet)
   "A list of packages to ensure are installed at launch.")
 
@@ -43,9 +45,9 @@
 
 ;; Jedi
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq jedi:setup-keys t)
-(add-hook 'python-mode-hook 'jedi:setup)
-(setq jedi:complete-on-dot t)
+;;(setq jedi:setup-keys t)
+;;(add-hook 'python-mode-hook 'jedi:setup)
+;;(setq jedi:complete-on-dot t)
 
 ;; Python Django
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -89,25 +91,30 @@
 (ido-mode 1)
 
 ;; yasnippet
-(setq yas/prompt-functions '(yas/ido-prompt))
-;; This is where your snippets will lie.
-;;(setq yas/root-directory '("~/.emacs.d/plugins/yasnippet/snippets"))
-;;(mapc 'yas/load-directory yas/root-directory)
+;;(add-to-list 'load-path "~/.emacs.d/elpa/yasnippet-20130907.1855")
+;;(setq yas/prompt-functions '(yas/ido-prompt))
+;;(global-set-key (kbd "C-c l") 'yas/insert-snippet) ;; Bind insert snippet
+;;(yas/initialize)
 
-(global-set-key (kbd "C-c l") 'yas/insert-snippet) ;; Bind insert snippet
+;; This is where your snippets will lie.
+;;(setq yas/root-directory '("~/.emacs.d/elpa/yasnippet-20130907.1855/snippets/"))
+;;(mapc 'yas/load-directory yas/root-directory)
 
 ;; auto-complete
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete")
 (ac-config-default)
 
-(setq-default ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
-;(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+;;(setq-default ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
+(setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
 (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
 (add-hook 'auto-complete-mode-hook 'ac-common-setup)
 (global-auto-complete-mode t)
 (add-to-list 'ac-modes 'objc-mode)
+
+;; Remove trailing whitespace on file save
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (add-hook 'text-mode-hook 'auto-fill-mode)
 
@@ -129,11 +136,11 @@
 
 ; indent 4 spaces
 (setq-default c-basic-offset 4)
-(setq indent-tabs-mode nil)
+(setq-default indent-tabs-mode nil)
 
 ;; Similar to C-x o
 (defun select-previous-window ()
-  "Switch to the previous window" 
+  "Switch to the previous window"
   (interactive)
   (select-window (previous-window)))
 
@@ -150,7 +157,7 @@
 
 ;; General settings
 (setq user-full-name "Robert S. Jones"
-      user-mail-address "robert.jones.sv@gmail.com"
+      user-mail-address "rjones@cardfree.com"
       inhibit-startup-message t
       initial-scratch-message nil
       major-mode 'fundamental-mode
@@ -176,13 +183,17 @@
 (setq display-time-24hr-format t)
 (global-hi-lock-mode 1)
 
+(show-paren-mode 1)
+(setq show-paren-delay 0)
+
 ;; Hide things that just take up space
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-  
+
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
+(global-set-key (kbd "C-c y") 'balance-windows)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -191,8 +202,8 @@
  ;; If there is more than one, they won't work right.
  )
 
-(require 'uniquify) 
-(setq 
+(require 'uniquify)
+(setq
   uniquify-buffer-name-style 'post-forward
   uniquify-separator ":")
 
@@ -204,3 +215,29 @@
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message t)
 
+;; Obj-C switch between header and source: Ctrl-C t
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun objc-in-header-file ()
+  (let* ((filename (buffer-file-name))
+         (extension (car (last (split-string filename "\\.")))))
+    (string= "h" extension)))
+
+(defun objc-jump-to-extension (extension)
+  (let* ((filename (buffer-file-name))
+         (file-components (append (butlast (split-string filename
+                                                         "\\."))
+                                  (list extension))))
+    (find-file (mapconcat 'identity file-components "."))))
+
+;;; Assumes that Header and Source file are in same directory
+(defun objc-jump-between-header-source ()
+  (interactive)
+  (if (objc-in-header-file)
+      (objc-jump-to-extension "m")
+    (objc-jump-to-extension "h")))
+
+(defun objc-mode-customizations ()
+  (define-key objc-mode-map (kbd "C-c t") 'objc-jump-between-header-source))
+
+(add-hook 'objc-mode-hook 'objc-mode-customizations)
