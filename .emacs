@@ -102,5 +102,9 @@
 (setq display-time-24hr-format t)
 (global-hi-lock-mode 1)
 
-(when (display-graphic-p)
-  (scroll-bar-mode -1))
+;; Hide things that just take up space
+(if (display-graphic-p)
+    ((scroll-bar-mode -1)
+     (tool-bar-mode -1))
+  (menu-bar-mode 0))
+  
