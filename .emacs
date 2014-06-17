@@ -1,4 +1,87 @@
+;; Configure additional package archives
+(package-initialize)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (let (el-get-master-branch)
+      (goto-char (point-max))
+      (eval-print-last-sexp))))
+(el-get 'sync)
+
+;; Install missing packages
+;; http://batsov.com/articles/2012/02/19/package-management-in-emacs-the-good-the-bad-and-the-ugly/
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar prelude-packages
+  '(ack-and-a-half auto-complete autopair concurrent ctable dash deferred
+		   epc flycheck flymake flymake-easy flymake-python-pyflakes
+		   ipython jedi popup python-django python-mode python-pylint
+		   pyvirtualenv s virtualenv yasnippet)
+  "A list of packages to ensure are installed at launch.")
+
+(defun prelude-packages-installed-p ()
+  (loop for p in prelude-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+(unless (prelude-packages-installed-p)
+  ;; check for new packages (package versions)
+  (message "%s" "Emacs Prelude is now refreshing its package database...")
+  (package-refresh-contents)
+  (message "%s" " done.")
+  ;; install the missing packages
+  (dolist (p prelude-packages)
+    (when (not (package-installed-p p))
+      (package-install p))))
+
+(provide 'prelude-packages)
+
+;; Jedi
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq jedi:setup-keys t)
+(add-hook 'python-mode-hook 'jedi:setup)
+(setq jedi:complete-on-dot t)
+
+;; Python Django
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-set-key (kbd "C-x j") 'python-django-open-project)
+
+(autoload 'django-html-mumamo-mode "~/.emacs.d/nxhtml/autostart.el")
+(setq auto-mode-alist
+      (append '(("\\.html?$" . django-html-mumamo-mode)) auto-mode-alist))
+(setq mumamo-background-colors nil)
+(add-to-list 'auto-mode-alist '("\\.html$" . django-html-mumamo-mode))
+
+;; Mumamo is making emacs 24.3 freak out:
+(when (and (equal emacs-major-version 24)
+           (equal emacs-minor-version 3))
+  (eval-after-load "bytecomp"
+    '(add-to-list 'byte-compile-not-obsolete-vars
+                  'font-lock-beginning-of-syntax-function))
+  (eval-after-load "bytecomp"
+    '(add-to-list 'byte-compile-not-obsolete-vars
+                  'font-lock-syntactic-keywords))
+
+  ;; tramp-compat.el clobbers this variable!
+  (eval-after-load "tramp-compat"
+    '(add-to-list 'byte-compile-not-obsolete-vars
+                  'font-lock-beginning-of-syntax-function))
+  (eval-after-load "tramp-compat"
+    '(add-to-list 'byte-compile-not-obsolete-vars
+                  'font-lock-syntactic-keywords))
+
+  (eval-after-load "mumamo"
+    '(setq mumamo-per-buffer-local-vars
+           (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq redisplay-preemption-period nil)
+(electric-pair-mode +1)
 
 ;; Enable ido
 (setq ido-enable-flex-matching t)
@@ -6,21 +89,16 @@
 (ido-mode 1)
 
 ;; yasnippet
-(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
-(require 'yasnippet)
 (setq yas/prompt-functions '(yas/ido-prompt))
-
 ;; This is where your snippets will lie.
-(setq yas/root-directory '("~/.emacs.d/plugins/yasnippet/snippets"))
-(mapc 'yas/load-directory yas/root-directory)
+;;(setq yas/root-directory '("~/.emacs.d/plugins/yasnippet/snippets"))
+;;(mapc 'yas/load-directory yas/root-directory)
 
-;; Bind insert snippet
-(global-set-key (kbd "C-c l") 'yas/insert-snippet)
+(global-set-key (kbd "C-c l") 'yas/insert-snippet) ;; Bind insert snippet
 
 ;; auto-complete
-(add-to-list 'load-path "~/elisp")
 (require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/elisp/ac-dict")
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete")
 (ac-config-default)
 
 (setq-default ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
@@ -53,13 +131,6 @@
 (setq-default c-basic-offset 4)
 (setq indent-tabs-mode nil)
 
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(show-paren-mode t))
-
 ;; Similar to C-x o
 (defun select-previous-window ()
   "Switch to the previous window" 
@@ -79,7 +150,7 @@
 
 ;; General settings
 (setq user-full-name "Robert S. Jones"
-      user-mail-address ""
+      user-mail-address "robert.jones.sv@gmail.com"
       inhibit-startup-message t
       initial-scratch-message nil
       major-mode 'fundamental-mode
@@ -112,3 +183,24 @@
   
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(require 'uniquify) 
+(setq 
+  uniquify-buffer-name-style 'post-forward
+  uniquify-separator ":")
+
+;; Eliminate some annoying prompts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq confirm-nonexistent-file-or-buffer nil)
+(setq ido-create-new-buffer 'always)
+(setq inhibit-startup-message t
+      inhibit-startup-echo-area-message t)
+
