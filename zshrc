@@ -5,10 +5,6 @@ DISABLE_AUTO_TITLE="true"
 
 ZSH_THEME="eastwood"
 
-alias bli="cd ~/ws/Blimpy"
-alias sdk="bli; cd ios-sdk"
-alias hh="cd ~/ws/hedgehog-ios"
-
 plugins=(git history history-substring-search brew colored-man)
 
 source $ZSH/oh-my-zsh.sh
@@ -28,3 +24,5 @@ export INFOPATH="~/info"
 # VCS as dirty. This makes repository status check for large repositories much,
 # much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+export PATH=/usr/local/bin:$PATH

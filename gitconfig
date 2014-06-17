@@ -27,8 +27,8 @@
 	status = auto
 
 [user]
-	name = <Name>
-	email = <Email>
+	name = Robert S. Jones
+	email = robert.jones.sv@gmail.com
 [github]
 	token = <token>
 	user = <user>

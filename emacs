@@ -177,7 +177,6 @@
 ;; Display line, column and time (24h format)
 (line-number-mode t)
 (column-number-mode t)
-(display-battery-mode 1)
 (size-indication-mode t)
 (display-time)
 (setq display-time-24hr-format t)
