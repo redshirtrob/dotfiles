@@ -16,6 +16,7 @@
 	diffnw = diff -w -p --stat
 	di = diff
 	changed = diff --name-only
+        retry = !git revert -n $1 && git reset
 
 	# Show files ignored by git:
     	ign = ls-files -o -i --exclude-standard
