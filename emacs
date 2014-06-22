@@ -157,7 +157,7 @@
 
 ;; General settings
 (setq user-full-name "Robert S. Jones"
-      user-mail-address "rjones@cardfree.com"
+      user-mail-address "robert.jones.sv@gmail.com"
       inhibit-startup-message t
       initial-scratch-message nil
       major-mode 'fundamental-mode
