@@ -26,3 +26,6 @@ export INFOPATH="~/info"
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 export PATH=/usr/local/bin:$PATH
+
+# I'm tired of enabling this everywhere
+defaults write com.apple.finder AppleShowAllFiles YES
