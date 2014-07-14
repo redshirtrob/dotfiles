@@ -15,7 +15,10 @@ export WORKON_HOME=~/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 alias workoff="deactivate"
 
-alias ws="cd ~/ws"
+WORKSPACE_DIR="~/ws"
+
+alias ws="cd $WORKSPACE_DIR"
+alias dotfiles="cd $WORKSPACE_DIR/dotfiles"
 
 export INFOPATH="~/info"
 
