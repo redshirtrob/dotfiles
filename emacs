@@ -255,3 +255,20 @@
 
 (require 'web-mode)
 
+(defvar copy-word-under-cursor-regex "[^[:word:]_]"
+  "Regular expression to use when copying with `copy-word-under-cursor'.
+Can be customized for each major mode.")
+
+(defun copy-word-under-cursor ()
+  "Copy the word under the cursor to the kill ring."
+  (interactive)
+  (save-excursion
+    (save-excursion (re-search-backward copy-word-under-cursor-regex))
+    (let ((beg (+ (match-beginning 0) 1))
+          (end (re-search-forward copy-word-under-cursor-regex)))
+      (copy-region-as-kill beg (- end 1)))))
+(global-set-key (kbd "C-c C-w") 'copy-word-under-cursor)
+
+(defun emacs-lisp-mode-customizations ()
+  (setq copy-word-under-cursor-regex "[^[:word:]\\-]"))
+(add-hook 'emacs-lisp-mode-hook 'emacs-lisp-mode-customizations)
