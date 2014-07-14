@@ -15,6 +15,8 @@ export WORKON_HOME=~/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 alias workoff="deactivate"
 
+alias ws="cd ~/ws"
+
 export INFOPATH="~/info"
 
 # Uncomment following line if you want to disable command autocorrection
