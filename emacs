@@ -43,12 +43,6 @@
 
 (provide 'prelude-packages)
 
-;; Jedi
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;(setq jedi:setup-keys t)
-;;(add-hook 'python-mode-hook 'jedi:setup)
-;;(setq jedi:complete-on-dot t)
-
 ;; Python Django
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-set-key (kbd "C-x j") 'python-django-open-project)
@@ -90,22 +84,11 @@
 (setq ido-everywhere t)
 (ido-mode 1)
 
-;; yasnippet
-;;(add-to-list 'load-path "~/.emacs.d/elpa/yasnippet-20130907.1855")
-;;(setq yas/prompt-functions '(yas/ido-prompt))
-;;(global-set-key (kbd "C-c l") 'yas/insert-snippet) ;; Bind insert snippet
-;;(yas/initialize)
-
-;; This is where your snippets will lie.
-;;(setq yas/root-directory '("~/.emacs.d/elpa/yasnippet-20130907.1855/snippets/"))
-;;(mapc 'yas/load-directory yas/root-directory)
-
 ;; auto-complete
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/plugins/auto-complete")
 (ac-config-default)
 
-;;(setq-default ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary ac-source-words-in-same-mode-buffers))
 (add-hook 'emacs-lisp-mode-hook 'ac-emacs-lisp-mode-setup)
 (add-hook 'c-mode-common-hook 'ac-cc-mode-setup)
@@ -148,8 +131,6 @@
 (global-set-key (kbd "M-s u") 'revert-buffer)
 
 ;; UTF-8
-;(set-terminal-coding-system 'utf-8)
-;(set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
 ;; Syntax highlighting
@@ -193,13 +174,6 @@
 (global-set-key "\C-x\C-m" 'execute-extended-command)
 (global-set-key "\C-c\C-m" 'execute-extended-command)
 (global-set-key (kbd "C-c y") 'balance-windows)
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 (require 'uniquify)
 (setq
