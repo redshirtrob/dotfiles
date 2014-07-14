@@ -115,6 +115,14 @@
 (setq auto-mode-alist
       (cons '("\\.mm$" . objc-mode) auto-mode-alist))
 
+; open 'zshrc' in shell-script-mode
+(setq auto-mode-alist
+      (cons '("zshrc$" . shell-script-mode) auto-mode-alist))
+
+; open 'emacs' in emacs-lisp-mode
+(setq auto-mode-alist
+      (cons '("emacs$" . emacs-lisp-mode) auto-mode-alist))
+
 (setq-default truncate-lines t)
 
 ; indent 4 spaces
