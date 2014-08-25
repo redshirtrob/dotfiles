@@ -1,3 +1,5 @@
 command script import ~/ws/chisel/fblldb.py
 command script import /Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/Python/lldb/macosx/heap.py
 command script import /Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/Resources/Python/lldb/macosx/crashlog.py
+
+command alias fs frame select
