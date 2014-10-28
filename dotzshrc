@@ -19,6 +19,7 @@ WORKSPACE_DIR="~/ws"
 
 alias ws="cd $WORKSPACE_DIR"
 alias dotfiles="cd $WORKSPACE_DIR/dotfiles"
+alias adb="/Applications/Android Studio.app/sdk/platform-tools/adb"
 
 export INFOPATH="~/info"
 
