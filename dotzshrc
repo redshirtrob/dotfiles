@@ -36,7 +36,7 @@ export PATH=/usr/local/bin:$PATH
 # I'm tired of enabling this everywhere
 defaults write com.apple.finder AppleShowAllFiles YES
 
-source ~/.rvm/scripts/rvm
+[[ -a ~/.rvm/scripts/rvm ]] && source ~/.rvm/scripts/rvm
 
 # Dont' give up on command if it fails to match a glob pattern
 setopt NO_NOMATCH
