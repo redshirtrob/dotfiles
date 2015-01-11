@@ -5,7 +5,7 @@ DISABLE_AUTO_TITLE="true"
 
 ZSH_THEME="eastwood"
 
-plugins=(git history history-substring-search brew colored-man)
+plugins=(git history history-substring-search brew colored-man go)
 
 source $ZSH/oh-my-zsh.sh
 export PATH=~/bin:/usr/local/bin:$PATH
@@ -40,3 +40,9 @@ defaults write com.apple.finder AppleShowAllFiles YES
 
 # Dont' give up on command if it fails to match a glob pattern
 setopt NO_NOMATCH
+
+# Go configuration
+export GOPATH=$HOME/ws/go
+export PATH=$PATH:$GOPATH/bin
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
