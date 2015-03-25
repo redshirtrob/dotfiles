@@ -5,10 +5,13 @@ DISABLE_AUTO_TITLE="true"
 
 ZSH_THEME="eastwood"
 
-plugins=(git history history-substring-search brew colored-man go)
+plugins=(git history history-substring-search brew colored-man go heroku lein)
 
 source $ZSH/oh-my-zsh.sh
 export PATH=~/bin:/usr/local/bin:$PATH
+
+# Uncomment to make emacs themes work
+#export TERM=xterm-256color
 
 # Configure Python virtualenvwrapper
 export WORKON_HOME=~/.virtualenvs
@@ -40,6 +43,10 @@ defaults write com.apple.finder AppleShowAllFiles YES
 
 # Dont' give up on command if it fails to match a glob pattern
 setopt NO_NOMATCH
+
+# PostgreSQL
+export PSQLPATH=/Applications/Postgres.app/Contents/Versions/9.4/bin
+export PATH=$PATH:$PSQLPATH
 
 # Go configuration
 export GOPATH=$HOME/ws/go
