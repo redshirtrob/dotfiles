@@ -1,5 +1,6 @@
 [core]
 	quotepath = false
+        excludesfile = ~/.gitignore
 [alias]
 	st = status
 	ci = commit
